@@ -29,6 +29,7 @@ const crearUsuario = async (req, res = response) => {
       uid: dbUser.id,
       name,
       token,
+      email
     });
   } catch (error) {
     console.log(error);
@@ -46,7 +47,7 @@ const loginUsuario = async (req, res = response) => {
     if (!dbUser) {
       return res.status(400).json({
         ok: false,
-        msg: "El correo no existe",
+        msg: "Credenciales no validas",
       });
     }
     // Confirmar si el password hace match
@@ -54,7 +55,7 @@ const loginUsuario = async (req, res = response) => {
     if (!validPassword) {
       return res.status(400).json({
         ok: false,
-        msg: "El password no es válido",
+        msg: "Credenciales no validas",
       });
     }
     // Generar el JWT
@@ -64,7 +65,9 @@ const loginUsuario = async (req, res = response) => {
       ok: true,
       uid: dbUser.id,
       name: dbUser.name,
+      email: dbUser.email,
       token,
+
     });
   } catch (error) {
     console.log(error);
@@ -77,15 +80,20 @@ const loginUsuario = async (req, res = response) => {
 };
 
 const revalidarToken = async (req, res = response) => {
-  const { uid, name } = req;
+  const { uid } = req;
   // console.log(uid, name);
-  // Generar el JWT
-  const token = await generarJWT(uid, name);
 
+  //ALL USER INFO
+  const dbUser = await Usuario.findById(uid);
+
+  // Generar el JWT
+  const token = await generarJWT(uid, dbUser.name);
+  
   return res.json({
     ok: true,
     uid,
-    name,
+    name: dbUser.name,
+    email: dbUser.email,
     token,
   });
 };
