@@ -23,4 +23,4 @@ const ShoeSchema = Schema({
   },
 });
 
-module.exports = model("Usuario", UsuarioSchema);
+module.exports = model("Shoe", ShoeSchema);
