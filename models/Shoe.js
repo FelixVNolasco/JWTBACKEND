@@ -1,7 +1,7 @@
 
 const { Schema, model } = require("mongoose");
 
-const ShoeSvhema = Schema({
+const ShoeSchema = Schema({
   shoeCode: {
     type: String,
     required: true,
